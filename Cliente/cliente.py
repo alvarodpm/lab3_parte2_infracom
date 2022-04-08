@@ -1,13 +1,14 @@
 import socket
 import threading
 import os
+import time
 
 UDP_IP_ADDRESS = "127.0.0.1"
 UDP_PORT_NO = 6789
 BUFFER_SIZE = 65536
 
 cant_clientes = int(input("Número de clientes a conectar (Máximo 25): "))
-cant_T_global = -1
+cant_T_global = 0
 
 def thread_cliente(clientSock, address):
     global cant_T_global
@@ -32,4 +33,7 @@ while cant_threads < cant_clientes:
     clientSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     server_address = (UDP_IP_ADDRESS, UDP_PORT_NO)
     threading.Thread(target=thread_cliente, args=(clientSock, server_address, )).start()
+    UDP_PORT_NO +=1
+    time.sleep(1)
     cant_threads += 1
+

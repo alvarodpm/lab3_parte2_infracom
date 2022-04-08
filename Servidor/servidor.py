@@ -29,29 +29,26 @@ elif(num_archivo == 2):
 cant_threads = 0
 
 def thread_client(soc_client, address):
-    #global UDP_PORT_NO
+    
     global cant_threads
-    #UDP_PORT_NO += 1
     print("address: ",address)
-    while cant_threads < cant_clientes:
-        cant_threads +=1
-        with open("./archivos/" + nombre_archivo , "rb") as f:
-            while True:
-                # leer los bytes del archivo
-                data_read = f.read(BUFFER_SIZE)
-                if not data_read:
-                    break
-                # Enviar el paquete por el socket UDP
-                soc_client.sendto(data_read, address)
-        soc_client.sendto(b"Archivo enviado completamente", address)
-        print("Terminé de enviar todo el archivo")
-        # Cerrar la conexion del socket
-        soc_client.close()
+    with open("./archivos/" + nombre_archivo , "rb") as f:
+        while True:
+            # leer los bytes del archivo
+            data_read = f.read(BUFFER_SIZE)
+            if not data_read:
+                break
+            # Enviar el paquete por el socket UDP
+            soc_client.sendto(data_read, address)
+    soc_client.sendto(b"Archivo enviado completamente", address)
+    print("Terminé de enviar todo el archivo")
+    # Cerrar la conexion del socket
+    soc_client.close()
 
 #Contador del número de Threads local para el While
-ThreadCountWhile = 0
+ThreadCountWhile = 1
 
-while ThreadCountWhile < cant_clientes:
+while ThreadCountWhile <= cant_clientes:
     serverSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     serverSock.bind((UDP_IP_ADDRESS, UDP_PORT_NO))
     print("Esperando conexión de un cliente")
@@ -62,4 +59,3 @@ while ThreadCountWhile < cant_clientes:
     print("Número del Thread: " + str(ThreadCountWhile) + " puerto: " + str(UDP_PORT_NO))
     ThreadCountWhile +=1
     UDP_PORT_NO += 1
-    
